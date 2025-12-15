@@ -24,11 +24,13 @@ model Zap {
   id          String    @id()   @default(uuid())
   triggerId   String    
   trigger     Trigger?
+  actions     Action[]
+  zapRuns     ZapRun[]
 }
 
 model Trigger {
   id        String    @id()   @default(uuid())
-  zapId     String
+  zapId     String @unique
   triggerId String
   type      AvailableTrigger  @relation(fields: [triggerId], references: [id])
   zap       Zap               @relation(fields: [zapId], references: [id])
@@ -39,4 +41,24 @@ model AvailableTrigger {
   id          String    @id()    @default(uuid())
   name        String
   triggers    Trigger[]
+}
+
+model Action {
+  id          String    @id()     @default(uuid())
+  zapId       String
+  zap         Zap       @relation(fields: [zapId], references: [id])
+  actionId    String
+  type        AvailableAction   @relation(fields: [actionId], references: [id])
+}
+
+model AvailableAction{
+  id        String     @id()      @default(uuid())
+  name      String
+  actions   Action[]
+}
+
+model ZapRun{
+  id        String     @id        @default(ulid())
+  zapId     String
+  zap       Zap        @relation(fields: [zapId], references: [id])
 }
