@@ -1,0 +1,14 @@
+
+import { email, z } from 'zod'
+
+export const signUpSchema = z.object({
+    name: z.string().min(3, "username is to short"),
+    email: z.string().min(2, "username is to short"),
+    password: z.string().min(5, "Password is too short")
+})
+
+export const signInSchema = z.object({
+    email: z.string().min(2, "username is to short"),
+    password: z.string().min(5, "Password is too short")
+})
+
