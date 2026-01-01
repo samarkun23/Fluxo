@@ -4,16 +4,9 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/src/index.js",
-      "types": "./dist/src/index.d.ts"
-    },
-    "./client": {
-      "import": "./dist/src/index.js",
-      "types": "./dist/src/index.d.ts"
-    }
-  },
+  "exports":{
+    "./client": "./src/index.ts"
+  }, 
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -b",
@@ -26,12 +19,12 @@
   "devDependencies": {
     "@types/pg": "^8.16.0",
     "dotenv": "^17.2.3",
-    "prisma": "^7.2.0",
-    "tsx": "^4.21.0"
+    "prisma": "^6.19.0",
+    "tsx": "^4.21.0",
+    "@repo/typescript-config": "workspace:*"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.1.0",
-    "@prisma/client": "^7.1.0",
+    "@prisma/client": "^6.19.0",
     "@types/dotenv": "^6.1.1",
     "pg": "^8.16.3"
   }

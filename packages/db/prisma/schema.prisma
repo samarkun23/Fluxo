@@ -5,12 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url = env("DATABASE_URL")
 }
 
 model User {
@@ -18,14 +18,17 @@ model User {
   name     String
   email    String
   password String
+  zaps     Zap[]
 }
 
 model Zap {
   id        String   @id() @default(uuid())
   triggerId String
+  userId    Int
   trigger   Trigger?
   actions   Action[]
   zapRuns   ZapRun[]
+  user      User      @relation(fields: [userId], references: [id]) 
 }
 
 model Trigger {
