@@ -55,6 +55,7 @@ function useZaps() {
 
 export default function () {
     const { loading, zaps } = useZaps();
+    const router = useRouter();
 
     return <div>
         <Appbar />
@@ -64,7 +65,9 @@ export default function () {
                     <div className="text-2xl font-bold">
                         My zaps
                     </div>
-                    <Button children="Create" variant="darkButton" className={` ${fonts.gruppo.className}  hover:bg-green-200/20`} />
+                    <Button children="Create" variant="darkButton" className={` ${fonts.gruppo.className}  hover:bg-green-200/20`} onClick={() => {
+                        router.push("/zap/create");
+                    }}/>
                 </div>
             </div>
 
