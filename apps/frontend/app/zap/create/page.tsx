@@ -10,11 +10,11 @@ const initialNodes = [
     { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Trigger' }, style: { background: "#0000", color: "ffff", border: '1px solid #ffff', borderRadius: 5 } },
 ];
 
-
+const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
 
 export default function () {
     const [nodes, setNodes] = useState(initialNodes);
-    // const [edges, setEdges] = useState(initialEdges);
+    const [edges, setEdges] = useState(initialEdges);
     const [selectTrigger, setSelectedTrigger] = useState('');
     const [selectActions, setSelectedActions] = useState([]);
 
@@ -22,40 +22,57 @@ export default function () {
         (changes: any) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
         [],
     );
-    // const onEdgesChange = useCallback(
-    //     (changes: any) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    //     [],
-    // );
-    // const onConnect = useCallback(
-    //     (params: any) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
-    //     [],
-    // );
+    const onEdgesChange = useCallback(
+        (changes: any) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+        [],
+    );
+    const onConnect = useCallback(
+        (params: any) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+        [],
+    );
 
     const addNode = () => {
-        const lastNode = nodes[nodes.length - 1].position.y;
-        const position = lastNode ? {x: 0, y: lastNode + 100} : {x: 0, y: 100}
-        const id = crypto.randomUUID();
+        const lastNode = nodes[nodes.length - 1];
+
+        const position = lastNode ? { x: 0, y: lastNode.position.y + 70 } : { x: 0, y: 70 }
+
+        const newNodeId = crypto.randomUUID();
+        // const edge = nodes[nodes.edge]
+
+        const newNode = {
+            id: newNodeId,
+            position,
+            data: { label: `${nodes.length}. Actions` },
+            style: { background: "#0000", color: "ffff", border: '1px solid #ffff', borderRadius: 5 },
+        }
 
         setNodes((nds) => [
             ...nds,
-            {
-                id,
-                position: position,
-                data: { label: `${nds.length}. Action` },
-                style: { background: "#0000", color: "ffff", border: '1px solid #ffff', borderRadius: 5 },
-            },
+            newNode
         ]);
+
+        if (lastNode) {
+            setEdges((edg) => [
+                ...edg,
+                {
+                    id: `${lastNode.id}-${newNode.id}`,
+                    source: lastNode.id,
+                    target: newNode.id,
+                }
+            ]);
+        }
     };
+
 
     return <div className={`${fonts.averia_libre.className} h-screen flex flex-col`}>
         <Appbar />
         <div className="flex-1">
             <ReactFlow
                 nodes={nodes}
-                // edges={edges}
-                onNodesChange={onNodesChange}
+                edges={edges}
+                // onNodesChange={onNodesChange}
                 // onEdgesChange={onEdgesChange}
-                // onConnect={onConnect}
+                onConnect={onConnect}
                 fitView
             >
                 <Background />
