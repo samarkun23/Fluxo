@@ -141,6 +141,7 @@ export default function () {
                             node
                     )
                 );
+                closeModel();
             } else {
                 setSelectedActions(a => {
                     let newActions = [...a];
@@ -150,6 +151,8 @@ export default function () {
                     }
                     return newActions;
                 })
+                setNodes((nds) => nds.map(node => node.id === selectedNodeId ? {...node, data: {label: props.name}} :node))
+                closeModel()
             }
         }} availableItems={selectedModelIndex === 0 ? availableTriggers : availableActions} index={selectedModelIndex} onClose={closeModel} /> </div>}
     </div>
