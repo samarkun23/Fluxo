@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -28,13 +28,14 @@ model Zap {
   trigger   Trigger?
   actions   Action[]
   zapRuns   ZapRun[]
-  user      User      @relation(fields: [userId], references: [id]) 
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Trigger {
   id        String           @id() @default(uuid())
   zapId     String           @unique
   triggerId String
+  metadata  Json             @default("{}")
   type      AvailableTrigger @relation(fields: [triggerId], references: [id])
   zap       Zap              @relation(fields: [zapId], references: [id])
 }
@@ -47,12 +48,13 @@ model AvailableTrigger {
 }
 
 model Action {
-  id       String          @id() @default(uuid())
+  id       String @id() @default(uuid())
   zapId    String
-  zap      Zap             @relation(fields: [zapId], references: [id])
+  zap      Zap    @relation(fields: [zapId], references: [id])
   actionId String
-  type     AvailableAction @relation(fields: [actionId], references: [id])
-  shortingOrder Int @default(0)
+  metadata      Json            @default("{}")
+  type          AvailableAction @relation(fields: [actionId], references: [id])
+  shortingOrder Int             @default(0)
 }
 
 model AvailableAction {
