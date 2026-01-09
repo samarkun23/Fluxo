@@ -3,7 +3,7 @@ import { Appbar } from "@/components/Appbar";
 import { fonts } from "@/lib/fonts";
 import '@xyflow/react/dist/style.css'
 import { addEdge, applyEdgeChanges, applyNodeChanges, Background, ReactFlow } from "@xyflow/react";
-import { useCallback, useEffect } from "react";
+import { act, useCallback, useEffect } from "react";
 import { useState } from "react";
 import { Model } from "@/components/Model";
 import axios from "axios";
@@ -38,7 +38,7 @@ export default function () {
     const [nodes, setNodes] = useState(initialNodes);
     const [edges, setEdges] = useState(initialEdges);
     const [selectTrigger, setSelectedTrigger] = useState<{ id: string, name: string } | null>(null);
-    const [selectActions, setSelectedActions] = useState<{ availableactionId: string, availableTriggersName: string | undefined }[]>([]);
+    const [selectActions, setSelectedActions] = useState<{ availableactionId: string, availableTriggersName: string | undefined, metadata: any }[]>([]);
     const [selectedModelIndex, setSelectedModelIndex] = useState<number | null>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
@@ -139,7 +139,7 @@ export default function () {
                             "triggerMetadata": {},
                             "actions": selectActions.map(actions => ({
                                 availableactionId: actions.availableactionId,
-                                actionMetadata: {}
+                                actionMetadata: actions.metadata
                             }))
                         }, {
                             headers: {
@@ -155,14 +155,14 @@ export default function () {
             </ReactFlow>
         </div>
 
-        {selectedModelIndex !== null && <div> <Model onSelect={(props: null | { name: string, id: string }) => {
+        {selectedModelIndex !== null && <div> <Model onSelect={(props: null | { name: string, id: string , metadata: any;}) => {
             if (props === null) {
                 setSelectedModelIndex(null);
                 return;
             } else if (selectedModelIndex === 0) {
                 setSelectedTrigger({
                     id: props.id,
-                    name: props.name
+                    name: props.name    
                 })
 
                 setNodes((nds) =>
@@ -182,7 +182,8 @@ export default function () {
                     let newActions = [...a];
                     newActions[selectedModelIndex - 1] = {
                         availableactionId: props.id,
-                        availableTriggersName: selectTrigger?.name
+                        availableTriggersName: selectTrigger?.name,
+                        metadata: props.metadata
                     }
                     return newActions;
                 })
