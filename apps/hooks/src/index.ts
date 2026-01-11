@@ -1,6 +1,6 @@
 import express, { json } from "express";
 const app = express();
-import {prisma} from "@repo/db/client"
+import {prismaClient} from "@repo/db/client"
 
 app.use(express.json());
 
@@ -11,7 +11,7 @@ app.post("/hooks/catch/:userId/:zapId", async(req, res) => {
   const body = req.body;
 
   //store in db a new trigger 
-  await prisma.$transaction(async tx => {
+  await prismaClient.$transaction(async tx => {
     // metadata is not present on the generated Prisma type; use an any-typed payload
 
     const run = await tx.zapRun.create({
@@ -36,4 +36,4 @@ app.post("/hooks/catch/:userId/:zapId", async(req, res) => {
 
 })
 
-app.listen(3000, () => console.log("server started on port: 3000"));
+app.listen(3002, () => console.log("server started on port: 3000"));
