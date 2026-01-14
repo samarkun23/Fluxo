@@ -5,12 +5,16 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "tsc -b && node dist/index.js"
+    "dev": "tsc -b && node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@repo/kafka": "workspace:*"
+    "@repo/kafka": "workspace:*",
+    "@repo/db": "workspace:*"
+  },
+  "dependencies": {
+    "kafkajs": "^2.2.4"
   }
 }
