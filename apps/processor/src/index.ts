@@ -1,6 +1,11 @@
 import { consumer, TOPIC_NAME, producer } from '@repo/kafka/kafka'
 import { prismaClient } from '@repo/db/client'
 import { parse } from './parser.js';
+import dotenv from 'dotenv'
+import { sendEmail } from './services/email.js';
+import { sendSol } from './services/solana.js';
+
+dotenv.config();
 
 async function main() {
     await consumer.connect();
@@ -59,8 +64,16 @@ async function main() {
                 console.log("sending email")
                 const metadata = currentAction.metadata as any;
                 const body = parse(metadata?.body , zapRunMetadata); // you just received {comment.amount}
-                const to = parse(metadata?.email , zapRunMetadata ) // {comment.email}
+                const to = parse(metadata?.email , zapRunMetadata ); // {comment.email}
                 console.log(`sending out email to ${to} body is ${body}`)
+
+                try {
+                    // await sendEmail(to, body);
+                    console.log("Email send done")
+                } catch (err) {
+                    console.error("Error sending email:", err);
+                    // Possibly rethrow or handle accordingly
+                }
             }
 
             if (currentAction.type.id === 'sol') {
@@ -69,6 +82,7 @@ async function main() {
                 const amout = parse(metadata?.amount, zapRunMetadata); // you just received {comment.amount}
                 const address = parse(metadata?.address, zapRunMetadata) // {comment.email}
                 console.log(`sending sol ${amout} to  address: ${address}`)
+                await sendSol(address, amout);
             }
 
             await new Promise(r => setTimeout(r, 5000));
